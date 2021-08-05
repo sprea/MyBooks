@@ -1,0 +1,27 @@
+{
+  "name": "mybooks",
+  "version": "1.0.0",
+  "description": "Una applicazione per gestire la propria libreria (Progetto corso Programmazione Web & Mobile)",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sprea/MyBooks.git"
+  },
+  "author": "Simone Spreafico",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sprea/MyBooks/issues"
+  },
+  "homepage": "https://github.com/sprea/MyBooks#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "mysql": "^2.18.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.12"
+  }
+}
