@@ -3,23 +3,34 @@ const express = require('express');
 const mysql = require('mysql');
 
 const app = express();
-const porta = process.env.PORT || 5000
+const porta = process.env.PORT || 5000;
+const config = require('./config');
 
 //L'api risponde in formato json
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-//Connessione database mysql
-const pool = mysql.createPool(
-    {
-        connectionLimit: 10,
-        host: 'localhost',
-        user: 'root',
-        password: 'toor',
-        database: 'MyBooks'
-    }
-);
+//ejs settings
+app.set('views', './api/views');
+app.set('view engine', 'ejs');
 
+//Connessione database mysql
+db = config.database;
+const pool = mysql.createPool(db);
+
+app.get('/', (req, res) => {
+    res.render('landing');
+});
+
+require('./api/routes/libri')(app, pool);
+
+//App in ascolto
+app.listen(porta, () => console.info('In ascolto sulla porta ' + porta));
+
+
+
+
+/*
 //Lista di tutti i libri nel db
 app.get('/libri', (req, res) => {
     pool.getConnection((err, connection) => 
@@ -148,9 +159,6 @@ app.put('/libri', (req, res) => {
         }
     )
 });
-
-//App in ascolto
-app.listen(porta, () => console.info('In ascolto sulla porta ' + porta));
-
+*/
 
 
