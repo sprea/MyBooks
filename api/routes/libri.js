@@ -40,7 +40,13 @@ module.exports = function(app, pool)
 
             
         })
-    })
+    });
+
+    app.get('/libreria/aggiungi', (req, res) => {
+
+        res.render('add');
+
+    });
 
     //Lista di un particolare libro
     app.get('/libri/:id', (req, res) => {

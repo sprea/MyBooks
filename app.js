@@ -1,6 +1,7 @@
 //Inclusione dei moduli
 const express = require('express');
 const mysql = require('mysql');
+const http = require('http');
 
 const app = express();
 const porta = process.env.PORT || 5000;
@@ -23,6 +24,7 @@ app.get('/', (req, res) => {
 });
 
 require('./api/routes/libri')(app, pool);
+require('./api/routes/user')(app, pool);
 
 //App in ascolto
 app.listen(porta, () => console.info('In ascolto sulla porta ' + porta));
