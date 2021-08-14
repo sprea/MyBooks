@@ -2,6 +2,9 @@
 const express = require('express');
 const mysql = require('mysql');
 const path = require('path');
+const https = require('https');
+const http = require('http');
+const axios = require('axios');
 
 var app = express();
 const porta = process.env.PORT || 5000;
@@ -24,7 +27,7 @@ const pool = mysql.createPool(db);
 
 
 
-require('./api/routes/libri')(app, pool);
+require('./api/routes/libri')(app, pool, axios);
 require('./api/routes/user')(app, pool);
 
 app.get('/', (req, res) => {
