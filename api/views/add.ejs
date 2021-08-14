@@ -33,7 +33,7 @@
                 </div>
                 <div class="form-group col-md-6">
                     <label for="inputValutazione">Valutazione</label>
-                    <select id="inputValutazione" class="form-control" name="Valutazione">
+                    <select id="inputValutazione" class="form-select" name="Valutazione">
                         <option selected>Scegli valutazione</option>
                         <option value="1">1 (non mi è piaciuto)</option>
                         <option value="2">2</option>
@@ -45,27 +45,15 @@
             </div>
             <br>
             <div class="form-group">
-                <input class="form-check-input" type="checkbox" id="completo" value="1" onclick="checkCompletato()" name="Completato">
-                <label class="form-check-label" for="completo">Completato?</label>
+                <label for="completo">Completato?</label>
+                    <select id="completo" class="form-select" name="Completato">
+                        <option value="0" selected>no</option>
+                        <option value="1">si</option>
+                    </select>
             </div>
             <br>
             <input type="submit" class="btn btn-primary" value="Aggiungi" />
         </form>
     </div>
-
-    <script>
-        function checkCompletato()
-        {
-            var checkbox = document.getElementById('completo');
-
-            if(!checkbox.checked)
-            {
-                checkbox.value = "0";
-            }else
-            {
-                checkbox.value = "1";
-            }
-        }
-    </script>
 </body>
 </html>
