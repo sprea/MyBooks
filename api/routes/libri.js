@@ -1,5 +1,6 @@
 module.exports = function(app, pool)
 {
+
     //Lista di tutti i libri nel db
     app.get('/libri', (req, res) => {
         pool.getConnection((err, connection) => {
@@ -18,34 +19,6 @@ module.exports = function(app, pool)
             })
         }
         )
-    });
-
-    app.get('/libreria', (req, res) => {
-        pool.getConnection((err, connection) => 
-        {
-            if (err) {
-                throw err;
-            }
-
-            connection.query('SELECT * FROM Libri', (err, rows) => 
-            {
-                connection.release();
-
-                if (err) {
-                    console.error(err);
-                }
-                
-                res.render('index', { rows: rows });
-            })
-
-            
-        })
-    });
-
-    app.get('/libreria/aggiungi', (req, res) => {
-
-        res.render('add');
-
     });
 
     //Lista di un particolare libro
@@ -136,4 +109,41 @@ module.exports = function(app, pool)
         }
         )
     });
+
+    //routes frontend webapp
+
+    //Pagina che mostra i libri inseriti
+    app.get('/libreria', (req, res) => {
+        pool.getConnection((err, connection) => 
+        {
+            if (err) {
+                throw err;
+            }
+
+            connection.query('SELECT * FROM Libri', (err, rows) => 
+            {
+                connection.release();
+
+                if (err) {
+                    console.error(err);
+                }
+                
+                res.render('index', { rows: rows });
+            })
+
+            
+        })
+    });
+
+    //Pagina caricamento nuovo libro
+    app.get('/libreria/aggiungi', (req, res) => {
+        res.render('add');
+    });
+
+    app.post('/libreria/aggiungi', (req, res) => {
+
+        const params = req.body;
+        res.send(params);
+    });
+    
 }
