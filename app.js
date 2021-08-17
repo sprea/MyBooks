@@ -6,6 +6,12 @@ const https = require('https');
 const http = require('http');
 const axios = require('axios');
 
+//Autenticazione
+const passport = require('passport');
+const LocalStrategy = require('passport-local').Strategy;
+const session = require('express-session');
+
+
 var app = express();
 const porta = process.env.PORT || 5000;
 const config = require('./config');
@@ -14,7 +20,7 @@ const config = require('./config');
 app.use(express.json())
 app.use(express.urlencoded({
     extended: true
-}))
+}));
 
 //ejs settings
 //app.set('views', './api/views');
@@ -24,8 +30,6 @@ app.set('view engine', 'ejs');
 //Connessione database mysql
 db = config.database;
 const pool = mysql.createPool(db);
-
-
 
 require('./api/routes/libri')(app, pool, axios);
 require('./api/routes/user')(app, pool);

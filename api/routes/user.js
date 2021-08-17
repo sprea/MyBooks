@@ -6,5 +6,5 @@ module.exports = function(app, pool)
 
     app.get('/registrati', (req, res) => {
         res.render('auth/register');
-    })
+    });
 }

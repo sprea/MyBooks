@@ -20,8 +20,9 @@
                         <h6 class="card-subtitle mb-2 text-muted">
                             <%= libro.Autore %>
                         </h6>
-                        <p class="card-text"></p>
-                        <a href="#" class="btn btn-primary">Dettagli</a>
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#detailpop">
+                            Dettagli
+                        </button>
                         <button type="button" class="btn btn-outline-danger"><svg xmlns="http://www.w3.org/2000/svg" width="16"
                                 height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
                                 <path
@@ -34,7 +35,6 @@
                     </div>
                 </div>
             </div>
-
         <% }) %>
     </div>
 
