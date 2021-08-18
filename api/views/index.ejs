@@ -20,9 +20,33 @@
                         <h6 class="card-subtitle mb-2 text-muted">
                             <%= libro.Autore %>
                         </h6>
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#detailpop">
+
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="<%= '#n' + libro.Isbn %>">
                             Dettagli
                         </button>
+                        
+                        <div class="modal fade" id="<%= 'n' + libro.Isbn %>" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+                            aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="staticBackdropLabel">
+                                            <%= libro.Titolo %>
+                                        </h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p>
+                                            <%= libro.Descrizione %>
+                                        </p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Chiudi</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
                         <button type="button" class="btn btn-outline-danger"><svg xmlns="http://www.w3.org/2000/svg" width="16"
                                 height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
                                 <path
@@ -37,6 +61,6 @@
             </div>
         <% }) %>
     </div>
-
+    
 </body>
 </html>
