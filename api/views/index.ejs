@@ -8,9 +8,21 @@
     <%- include('./partials/navbar'); %>
 </head>
 <body>
-    <div class="row">
+<div class="container">
+    <div class="title" align="left">
+        <h2>Libreria</h2>
+    </div>
+
+    <% if(errore.length != 0) {%>
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            <%= errore %>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    <%}%>
+
+    <div class="row" style="padding-top: 30px; padding-left: 10px; padding-right: 10px;">
         <% rows.forEach(libro => { %>
-            <div class="col-lg-4 col-md-12">
+            <div class="col">
                 <div class="card" style="width: 18rem;">
                     <img class="card-img-top" src="<%= libro.urlCopertina %>" alt="Card image cap" width="230" height="450">
                     <div class="card-body">
@@ -39,28 +51,56 @@
                                         <p>
                                             <%= libro.Descrizione %>
                                         </p>
+                                        <br>
+                                        <dl class="row">
+                                            <dt class="col-sm-3">Pagine Lette</dt>
+                                            <dd class="col-sm-9"><%= libro.PagineLette %> di <%= libro.Pagine %></dd>
+                                        
+                                            <dt class="col-sm-3">Completato</dt>
+                                            <dd class="col-sm-9">
+                                                <% if(libro.Completato){%> <p>Si</p> <% }else{ %> <p>No</p> <% } %>
+                                            </dd>
+                                        
+                                            <dt class="col-sm-3">Impressioni</dt>
+                                            <dd class="col-sm-9"><% if(libro.Impressioni === ''){%> <p>Ancora niente...</p> <% }else{ %> <%= libro.Impressioni %> <% } %></dd>
+                                        
+                                            <dt class="col-sm-3">Valutazione</dt>
+                                            <dd class="col-sm-9">
+                                                <% if(libro.Valutazione == 0){ %>
+
+                                                    <%= libro.Valutazione %> (Non ancora valutato)
+                                                <% }else if(libro.Valutazione == 5){ %>
+                                                    <%= libro.Valutazione %> (Mi e' piaciuto molto)
+                                                <% }else if(libro.Valutazione == 1){ %>
+                                                    <%= libro.Valutazione %> (non mi è piaciuto)
+                                                <% }else{ %>
+                                                    <%= libro.Valutazione %>
+                                                <% } %>
+                                            </dd>
+                                        </dl>
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Chiudi</button>
+                                        <a class="btn btn-primary" href="/libreria/modifica/<%= libro.Isbn %>" role="button">Modifica</a>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         
-                        <button type="button" class="btn btn-outline-danger"><svg xmlns="http://www.w3.org/2000/svg" width="16"
-                                height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                        <a class="btn btn-outline-danger" href="/libreria/elimina/<%= libro.Isbn %>">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
                                 <path
                                     d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z" />
                                 <path fill-rule="evenodd"
                                     d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z" />
                             </svg>
                             Elimina
-                        </button>
+                        </a>
                     </div>
                 </div>
             </div>
         <% }) %>
     </div>
-    
+</div>
 </body>
 </html>

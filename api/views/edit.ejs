@@ -1,17 +1,19 @@
 <!DOCTYPE html>
 <html lang="it">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aggiungi libro</title>
+    <title>Modifica libro</title>
     <%- include('./partials/navbar'); %>
 </head>
+
 <body>
     <div class="container">
 
         <div class="title" align="left">
-            <h2>Aggiungi</h2>
+            <h2>Modifica</h2>
         </div>
 
         <% if(errore.length != 0) {%>
@@ -21,27 +23,27 @@
             </div>
         <%}%>
 
-        <form method="POST" action="/libreria/aggiungi" id="addForm">
+        <form method="POST" action="/libreria/modifica/<%= Isbn %>" id="editForm">
             <div class="form-group row">
                 <div class="form-group col-md-6">
-                    <label for="inputISBN">Isbn libro che vuoi aggiungere</label>
-                    <input type="number" class="form-control" id="inputISBN" placeholder="Isbn" name="Isbn" required>
+                    <label for="inputISBN">Isbn</label>
+                    <input type="number" value="<%= Isbn %>" class="form-control" id="inputISBN" placeholder="Isbn" name="Isbn" required disabled>
                 </div>
                 <div class="form-group col-md-6">
                     <label for="inputPagineLette">Pagine che hai letto</label>
-                    <input type="number" class="form-control" id="inputPagineLette" placeholder="0,1,2,3..." name="PagineLette" required>
+                    <input type="number" value="<%= PagineLette %>" class="form-control" id="inputPagineLette" placeholder="0,1,2,3..." name="PagineLette" required>
                 </div>
             </div>
             <br>
             <div class="form-group row">
                 <div class="form-group col-md-6">
                     <label for="inputImpressioni">Impressioni</label>
-                    <textarea class="form-control" id="inputImpressioni" placeholder="Cosa ti è piaciuto?" name="Impressioni"></textarea>
+                    <input class="form-control" type="text" id="inputImpressioni" name="Impressioni" value="<%= Impressioni %>">
                 </div>
                 <div class="form-group col-md-6">
                     <label for="inputValutazione">Valutazione</label>
                     <select id="inputValutazione" class="form-select" name="Valutazione">
-                        <option selected value="0">0 (non ancora valutato)</option>
+                        <option value="0">0 (non ancora valutato)</option>
                         <option value="1">1 (non mi è piaciuto)</option>
                         <option value="2">2</option>
                         <option value="3">3</option>
@@ -53,14 +55,18 @@
             <br>
             <div class="form-group">
                 <label for="completo">Completato?</label>
-                    <select id="completo" class="form-select" name="Completato">
-                        <option value="0" selected>no</option>
-                        <option value="1">si</option>
-                    </select>
+                <select id="completo" class="form-select" name="Completato">
+                    <option value="0">no</option>
+                    <option value="1">si</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <input type="hidden" value="<%= Pagine %>" class="form-control" id="inputPagine" name="Pagine">
             </div>
             <br>
-            <input type="submit" class="w-100 btn btn-lg btn-primary" value="Aggiungi" />
+            <input type="submit" class="w-100 btn btn-lg btn-primary" value="Modifica" />
         </form>
     </div>
 </body>
+
 </html>

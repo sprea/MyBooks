@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Libreria</title>
+    <%- include('./partials/navbar'); %>
+</head>
+<body>
+<div class="container">
+    <div class="title" align="left">
+        <p class="h3">Risultati della ricerca</p>
+    </div>
+
+    <div class="row" style="padding-top: 30px; padding-left: 10px; padding-right: 10px;">
+        <% if(n == 0){ %>
+            <div class="subtitle" align="center">
+                <h2>Nessun libro trovato</h2>
+            </div>
+        <% }else{ %>
+            <% libri.forEach(libro => { %>
+                <div class="col">
+                    <div class="card" style="width: 18rem;">
+                        <img class="card-img-top" src="<%= libro.urlCopertina %>" alt="Card image cap" width="230" height="450">
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                <%= libro.Titolo %>
+                            </h5>
+                            <h6 class="card-subtitle mb-2 text-muted">
+                                <%= libro.Autore %>
+                            </h6>
+
+                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="<%= '#n' + libro.Isbn %>">
+                                Dettagli
+                            </button>
+                            
+                            <div class="modal fade" id="<%= 'n' + libro.Isbn %>" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+                                aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="staticBackdropLabel">
+                                                <%= libro.Titolo %>
+                                            </h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p>
+                                                <%= libro.Descrizione %>
+                                            </p>
+                                            <br>
+                                            <dl class="row">
+                                                <dt class="col-sm-3">Pagine Lette</dt>
+                                                <dd class="col-sm-9">
+                                                    <%= libro.PagineLette %> di <%= libro.Pagine %>
+                                                </dd>
+                                            
+                                                <dt class="col-sm-3">Completato</dt>
+                                                <dd class="col-sm-9">
+                                                    <% if(libro.Completato){%>
+                                                        <p>Si</p>
+                                                        <% }else{ %>
+                                                            <p>No</p>
+                                                            <% } %>
+                                                </dd>
+                                            
+                                                <dt class="col-sm-3">Impressioni</dt>
+                                                <dd class="col-sm-9">
+                                                    <% if(libro.Impressioni==='' ){%>
+                                                        <p>Ancora niente...</p>
+                                                        <% }else{ %>
+                                                            <%= libro.Impressioni %>
+                                                                <% } %>
+                                                </dd>
+                                            
+                                                <dt class="col-sm-3">Valutazione</dt>
+                                                <dd class="col-sm-9">
+                                                    <% if(libro.Valutazione == 0){ %>
+
+                                                        <%= libro.Valutazione %> (Non ancora valutato)
+                                                    <% }else if(libro.Valutazione == 5){ %>
+                                                        <%= libro.Valutazione %> (Mi e' piaciuto molto)
+                                                    <% }else if(libro.Valutazione == 1){ %>
+                                                        <%= libro.Valutazione %> (non mi è piaciuto)
+                                                    <% }else{ %>
+                                                        <%= libro.Valutazione %>
+                                                    <% } %>
+                                                </dd>
+                                            </dl>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Chiudi</button>
+                                            <a class="btn btn-primary" href="/libreria/modifica/<%= libro.Isbn %>" role="button">Modifica</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <a class="btn btn-outline-danger" href="/libreria/elimina/<%= libro.Isbn %>">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                                    <path
+                                        d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z" />
+                                    <path fill-rule="evenodd"
+                                        d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z" />
+                                </svg>
+                                Elimina
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            <% }) %>
+        </div>
+    <% } %>
+</div>
+</body>
+</html>
