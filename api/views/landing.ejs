@@ -9,6 +9,15 @@
 </head>
 <body>
     <div id="home" align="center">
+        <div class="container-fluid" style="padding-top: 12px;">
+             <% if(messaggio.length != 0) { %>
+                <div class="alert alert-success alert-dismissible fade show" role="alert" style="width: 600px;">
+                    <%= messaggio %>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            <% } %>
+        </div>
+       
         <h1>Benvenuti su MyBooks</h1>
     </div>
 </body>

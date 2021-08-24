@@ -1,6 +1,44 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj" crossorigin="anonymous"></script>
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
+
+<% if(req.session && req.session.logged_in) { %>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="/">MyBooks</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="/libreria">Libreria</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/libreria/aggiungi">Aggiungi libro</a>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Account
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li><a class="dropdown-item" href="#">Profilo</a></li>
+                <li>
+                  <form id="logout_form" action="/logout" method="POST">
+                    <a class="dropdown-item" href="javascript: {}" onclick="document.getElementById('logout_form').submit(); return false;">Esci</a>
+                  </form>
+                </li>
+              </ul>
+            </li>
+          </ul>
+          <form class="d-flex" action="/libreria/ricerca" method="GET">
+            <input class="form-control me-2" type="search" placeholder="Cerca libri" aria-label="Search" name="titolo">
+            <button class="btn btn-outline-success" type="submit">Cerca</button>
+          </form>
+        </div>
+      </div>
+  </nav>
+<% } else { %>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container-fluid">
       <a class="navbar-brand" href="/">MyBooks</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -9,26 +47,13 @@
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
           <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="/libreria">Libreria</a>
+            <a class="nav-link active" href="/login">Login</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="/login">Login</a>
-          </li>
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-              Nuovo utente?
-            </a>
-            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <li><a class="dropdown-item" href="/registrati">Registrati</a></li>
-              <li><a class="dropdown-item" href="#">Scarica l'app</a></li>
-              <li><a class="dropdown-item" href="/libreria/aggiungi">Aggiungi nuovo libro</a></li>
-            </ul>
+            <a class="nav-link active" href="/registrati">Registrati</a>
           </li>
         </ul>
-        <form class="d-flex" action="/libreria/ricerca" method="GET">
-          <input class="form-control me-2" type="search" placeholder="Cerca libri" aria-label="Search" name="titolo">
-          <button class="btn btn-outline-success" type="submit">Cerca</button>
-        </form>
       </div>
     </div>
-  </nav>
+</nav>
+<% } %>
