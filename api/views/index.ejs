@@ -20,6 +20,7 @@
         </div>
     <%}%>
 
+    <% if(rows.length > 0) { %>
     <div class="row" style="padding-top: 30px; padding-left: 10px; padding-right: 10px;">
         <% rows.forEach(libro => { %>
             <div class="col">
@@ -101,6 +102,11 @@
             </div>
         <% }) %>
     </div>
+    <% } else { %>
+        <div class="subtitle" align="center">
+            <h2>Ancora nessun libro inserito: <a href="/libreria/aggiungi">vai alla pagina di inserimento</a></h2>
+        </div>
+    <% } %>
 </div>
 </body>
 </html>

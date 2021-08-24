@@ -10,6 +10,74 @@ module.exports = function(app, pool, bcrypt)
         res.render('auth/register', {messaggio : "", req: req});
     });
 
+    app.get('/profilo', (req, res) => {
+
+        var user;
+
+        pool.getConnection((err, connection) => {
+            if (err) {
+                throw err;
+            }
+
+            connection.query('SELECT * from MyBooks.Utenti WHERE Email = ?', [req.session.logged_in_email_address], (err, rows) => 
+            {
+                connection.release();
+
+                if(rows.length <= 0)
+                {
+                    res.redirect('/');
+                    return;
+                }
+
+                user = rows[0];
+
+                res.render('auth/profile', { User: user, req: req, messaggio: '' });
+
+            })
+        });
+    });
+
+    app.post('/profilo', (req, res) => {
+
+        pool.getConnection((err, connection) => {
+            if (err) {
+                throw err;
+            }
+
+            connection.query('SELECT * from MyBooks.Utenti WHERE Email = ?', [req.session.logged_in_email_address], (err, rows) => 
+            {
+                connection.release();
+
+                if(rows.length <= 0)
+                {
+                    res.render('auth/login', {messaggio : "Utente non trovato", req: req});
+                    return;
+                }
+
+                var user = rows[0];
+
+                var oldPassword = req.body.currentpassword;
+
+                var same = bcrypt.compareSync(oldPassword, rows[0].Password);
+
+                if (same) {
+
+                    const hashedPassword = bcrypt.hashSync(req.body.newpassword, 10);
+
+                    connection.query('UPDATE MyBooks.Utenti SET Password = ? WHERE Email = ?', [hashedPassword, req.session.logged_in_email_address], (err, rows) => {
+                        
+                        res.redirect('/libreria');
+                    });
+                    
+                }else {
+                    res.render('auth/profile', { messaggio: "La password attuale inserita non è corretta", req: req, User: user });
+                    return;
+                }
+
+            })
+        });
+    });
+
     //Logout utente
     app.post('/logout', (req, res) => {
         req.session.destroy(null);
@@ -59,7 +127,7 @@ module.exports = function(app, pool, bcrypt)
         });
     });
 
-    app.post('/registrati', async (req, res) => {
+    app.post('/registrati', (req, res) => {
 
         if(req.body.nome.length == 0 || req.body.cognome.length == 0 || req.body.email.length == 0 || req.body.password.length == 0)
         {
@@ -68,7 +136,7 @@ module.exports = function(app, pool, bcrypt)
         }
 
         try{
-            const hashedPassword = await bcrypt.hash(req.body.password, 10);
+            const hashedPassword = bcrypt.hashSync(req.body.password, 10);
 
             pool.getConnection((err, connection) => {
                 if (err) {
@@ -86,8 +154,6 @@ module.exports = function(app, pool, bcrypt)
                     {
                         //l'utente si può registrare
 
-                        var idUtente = rows[0].Id;
-    
                         pool.getConnection((err, connection) => {
                             if(err)
                             {
@@ -101,14 +167,28 @@ module.exports = function(app, pool, bcrypt)
                                 {
                                     console.error(err);
                                 }
-    
+                            })
+                        });
+
+                        pool.getConnection((err, connection) => {
+
+                            if(err)
+                            {
+                                throw err;
+                            }
+
+                            connection.query('SELECT * FROM MyBooks.Utenti WHERE Email = ?', [req.body.email], (err, rows) => {
+                                connection.release();
+
+                                var idUtente = rows[0].Id;
+
                                 req.session.logged_in = true;
-                                req.session.logged_in_email_address = req.body.email_address;
+                                req.session.logged_in_email_address = req.body.email;
                                 req.session.logged_in_id = idUtente;
 
                                 res.redirect('/libreria');
-                            })
-                        })
+                            });
+                        });
                     }else
                     {
                         //l'utente è gia registrato
