@@ -4,7 +4,7 @@
 <% if(req.session && req.session.logged_in) { %>
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
       <div class="container-fluid">
-        <a class="navbar-brand" href="/">MyBooks</a>
+        <a class="navbar-brand" href="/libreria">MyBooks</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
@@ -21,7 +21,7 @@
                 Account
               </a>
               <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <li><a class="dropdown-item" href="#">Profilo</a></li>
+                <li><a class="dropdown-item" href="/profilo">Profilo <%= req.session.logged_in_email_address %></a></li>
                 <li>
                   <form id="logout_form" action="/logout" method="POST">
                     <a class="dropdown-item" href="javascript: {}" onclick="document.getElementById('logout_form').submit(); return false;">Esci</a>

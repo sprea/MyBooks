@@ -39,6 +39,8 @@ module.exports = function(app, pool, bcrypt)
                     return;
                 }
 
+                var idUtente = rows[0].Id;
+
                 var plaintextPassword = req.body.password;
 
                 var same = bcrypt.compareSync(plaintextPassword, rows[0].Password);
@@ -46,6 +48,7 @@ module.exports = function(app, pool, bcrypt)
                 if (same) {
                     req.session.logged_in = true;
                     req.session.logged_in_email_address = req.body.email;
+                    req.session.logged_in_id = idUtente;
                     res.redirect('/libreria');
                 }else {
                     res.render('auth/login', { messaggio: "Email o password errati", req: req });
@@ -82,6 +85,8 @@ module.exports = function(app, pool, bcrypt)
                     if(rows.length <= 0)
                     {
                         //l'utente si può registrare
+
+                        var idUtente = rows[0].Id;
     
                         pool.getConnection((err, connection) => {
                             if(err)
@@ -99,6 +104,7 @@ module.exports = function(app, pool, bcrypt)
     
                                 req.session.logged_in = true;
                                 req.session.logged_in_email_address = req.body.email_address;
+                                req.session.logged_in_id = idUtente;
 
                                 res.redirect('/libreria');
                             })

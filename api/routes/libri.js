@@ -25,7 +25,7 @@ module.exports = function(app, pool, axios)
                 throw err;
             }
 
-            connection.query('SELECT * FROM Libri', (err, rows) => 
+            connection.query('SELECT * FROM Libri WHERE Id_Utente = ?', [req.session.logged_in_id], (err, rows) => 
             {
                 connection.release();
 
@@ -111,9 +111,9 @@ module.exports = function(app, pool, axios)
                         throw err;
                     }
 
-                    var sql = "INSERT INTO MyBooks.Libri (Isbn, Titolo, Autore, Pagine, PagineLette, Completato, Impressioni, Valutazione, urlCopertina, Descrizione) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                    var sql = "INSERT INTO MyBooks.Libri (Isbn, Titolo, Autore, Pagine, PagineLette, Completato, Impressioni, Valutazione, urlCopertina, Descrizione, Id_Utente) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-                    connection.query(sql, [params.Isbn, titolo, autoriString, pagine, params.PagineLette, params.Completato, params.Impressioni, params.Valutazione, copertina, descrizione], (err, rows) => 
+                    connection.query(sql, [params.Isbn, titolo, autoriString, pagine, params.PagineLette, params.Completato, params.Impressioni, params.Valutazione, copertina, descrizione, req.session.logged_in_id], (err, rows) => 
                     {
                         connection.release();
     
@@ -156,7 +156,7 @@ module.exports = function(app, pool, axios)
                 throw err;
             }
 
-            connection.query('SELECT * FROM Libri where Isbn = ?', [id], (err, rows) => 
+            connection.query('SELECT * FROM Libri where Isbn = ? AND Id_Utente = ?', [id, req.session.logged_in_id], (err, rows) => 
             {
                 connection.release();
 
@@ -166,7 +166,8 @@ module.exports = function(app, pool, axios)
 
                 if (rows.length <= 0) //libro non trovato
                 {
-                    res.render('index', { req: req });
+                    res.redirect('/libreria');
+                    return;
                 }
                 
                 res.render('edit', {
@@ -237,7 +238,7 @@ module.exports = function(app, pool, axios)
             completato = true;
         }
     
-        var sql = 'UPDATE MyBooks.Libri SET PagineLette = ?, Completato = ?, Impressioni = ?, Valutazione = ? WHERE Isbn = ?;'
+        var sql = 'UPDATE MyBooks.Libri SET PagineLette = ?, Completato = ?, Impressioni = ?, Valutazione = ? WHERE Isbn = ? AND Id_Utente = ?;'
 
         pool.getConnection((err, connection) => {
             
@@ -255,7 +256,7 @@ module.exports = function(app, pool, axios)
                 throw err;
             }
 
-            connection.query(sql, [paginelette, completato, impressioni, valutazione, id], (err, rows) => {
+            connection.query(sql, [paginelette, completato, impressioni, valutazione, id, req.session.logged_in_id], (err, rows) => {
                     
                 connection.release();
 
@@ -290,9 +291,9 @@ module.exports = function(app, pool, axios)
                 return;
             }
 
-            var sql = 'DELETE FROM MyBooks.Libri WHERE Isbn = ?;'
+            var sql = 'DELETE FROM MyBooks.Libri WHERE Isbn = ? AND Id_Utente = ?;'
 
-            connection.query(sql, [id], (err, rows) => {
+            connection.query(sql, [id, req.session.logged_in_id], (err, rows) => {
                 
                 if(err)
                 {
@@ -314,10 +315,10 @@ module.exports = function(app, pool, axios)
                 return;
             }
 
-            var sql = "SELECT * from MyBooks.Libri WHERE Titolo LIKE ?";
+            var sql = "SELECT * from MyBooks.Libri WHERE Titolo LIKE ? AND Id_Utente = ?";
             titolo = '%' + titolo + '%';
 
-            connection.query(sql, [titolo], (err, rows) => {
+            connection.query(sql, [titolo, req.session.logged_in_id], (err, rows) => {
                 
                 if(err)
                 {
