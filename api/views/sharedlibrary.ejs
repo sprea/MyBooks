@@ -4,49 +4,16 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Libreria</title>
-    <%- include('./partials/navbar'); %>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj" crossorigin="anonymous"></script>
+    <title>Libreria di <%= utente.Nome %></title>
+    <div class="title" align="center" style="padding-top: 20px;">
+         <h2>Libreria di <%= utente.Nome %></h2>
+    </div>
 </head>
 <body>
 <div class="container">
-    <div class="title" align="left">
-        <h2>Libreria</h2>
-    </div>
-
-    <% if(errore.length != 0) {%>
-        <div class="alert alert-warning alert-dismissible fade show" role="alert">
-            <%= errore %>
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    <%}%>
-
-    <% if(libri.length > 0) { %>
     <div class="row" style="padding-top: 30px; padding-left: 10px; padding-right: 10px;">
-        <div class="container" align="right">
-            <h4>Condividi la tua libreria</h4>
-            <button type="button" class="btn btn-secondary btn-lg" data-bs-toggle="modal" data-bs-target="#shareModal">
-                Condividi
-            </button>
-        </div>
-            <div class="modal fade" id="shareModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">Condividi la tua libreria</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            Condividi questo <a href="/libreria/<%= req.session.logged_in_id %>/condividi/">link</a> 
-                            tramite email o messaggio per mostrare la tua libreria digitale
-                            <input disabled type="text" name="sharelink" id="sharelinktext" value="/libreria/<%= req.session.logged_in_id %>/condividi/">
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Chiudi</button>
-                            <button onclick="copyShareLink()" class="btn btn-primary">Copia link</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
         <% libri.forEach(libro => { %>
             <div class="col">
                 <div class="card" style="width: 18rem;">
@@ -107,43 +74,15 @@
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Chiudi</button>
-                                        <a class="btn btn-primary" href="/libreria/modifica/<%= libro.Isbn %>" role="button">Modifica</a>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        
-                        <a class="btn btn-outline-danger" href="/libreria/elimina/<%= libro.Isbn %>">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
-                                <path
-                                    d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z" />
-                                <path fill-rule="evenodd"
-                                    d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z" />
-                            </svg>
-                            Elimina
-                        </a>
                     </div>
                 </div>
             </div>
         <% }) %>
     </div>
-    <% } else { %>
-        <div class="subtitle" align="center">
-            <h2>Ancora nessun libro inserito: <a href="/libreria/aggiungi">vai alla pagina di inserimento</a></h2>
-        </div>
-    <% } %>
 </div>
-<script>
-    function copyShareLink()
-    {
-        var link = document.getElementById('sharelinktext');
-
-        link.select();
-
-        link.setSelectionRange(0, 99999); /* For mobile devices */
-
-        navigator.clipboard.writeText(link.value);
-    }
-</script>
 </body>
 </html>

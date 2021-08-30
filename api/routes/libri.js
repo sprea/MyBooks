@@ -15,6 +15,49 @@ module.exports = function(app, pool, axios)
 
     //routes frontend webapp
 
+    //Pagina condivisione libreria
+
+    app.get('/libreria/:idutente/condividi/', (req, res) => {
+
+        var Idutente = req.params.idutente;
+        var Utente;
+
+        pool.getConnection((err, connection) => 
+        {
+            if (err) {
+                throw err;
+            }
+
+            connection.query('SELECT Nome, Cognome, Email FROM Utenti WHERE Id = ?', [Idutente], (err, rows) => {
+               
+
+                if(err)
+                {
+                    console.error(err);
+                }
+
+                if(rows.length <= 0)
+                {
+                    res.render('sharedlibrarynotfound');
+                    return;
+                }else
+                {
+                    Utente = rows[0];
+                    connection.query('SELECT * FROM Libri WHERE Id_Utente = ?', [Idutente], (err, rows) => {
+                        connection.release();
+
+                        if (err) {
+                            console.error(err);
+                        }
+
+                        res.render('sharedlibrary', { libri: rows, utente: Utente });
+                    });
+                }
+            });
+        })
+
+    });
+
     //Pagina che mostra i libri inseriti
     app.get('/libreria', requirePageLogin, (req, res) => {
         pool.getConnection((err, connection) => 
@@ -31,7 +74,7 @@ module.exports = function(app, pool, axios)
                     console.error(err);
                 }
                 
-                res.render('index', { rows: rows, errore: '', req: req});
+                res.render('index', { libri: rows, errore: '', req: req});
             })
 
             
