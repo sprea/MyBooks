@@ -1,5 +1,3 @@
-const { response } = require("express");
-
 module.exports = function(app, pool, axios)
 {
     //Middleware che gestisce l'accesso alle pagine protette
@@ -185,6 +183,7 @@ module.exports = function(app, pool, axios)
 
     });
 
+    //Modifica del libro tramite isbn
     app.post('/libreria/modifica/:id', requirePageLogin, (req, res) => {
 
         var id = req.params.id;
@@ -281,6 +280,7 @@ module.exports = function(app, pool, axios)
         })
     });
 
+    //Eliminazione di un particolare libro
     app.get('/libreria/elimina/:id', requirePageLogin, (req, res) => {
         var id = req.params.id;
 
@@ -305,6 +305,7 @@ module.exports = function(app, pool, axios)
         })
     });
 
+    //Funzione ricerca per i libri
     app.get('/libreria/ricerca', requirePageLogin, (req, res) => {
         var titolo = req.query.titolo;
 

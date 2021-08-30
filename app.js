@@ -7,12 +7,12 @@ const http = require('http');
 const axios = require('axios');
 const bcrypt = require('bcrypt');
 const session = require('express-session');
+const cookieParser = require('cookie-parser');
 require('dotenv').config();
 
 var app = express();
 const porta = process.env.PORT || 5000;
-const config = require('./config');
-const cookieParser = require('cookie-parser');
+const config = require('./db.config');
 
 
 //L'api risponde in formato json
@@ -25,20 +25,18 @@ app.use(express.urlencoded({
 app.use(cookieParser(process.env.COOKIE_SECRET));
 app.use(session({
     secret: process.env.COOKIE_SECRET,
-    maxAge: 86400000,
     resave: false,
     saveUninitialized: false,
     cookie: {
-        maxAge: 86400000,
+        maxAge: 2700000,  //2700000 ms corrispondono a 45 minuti
         path: '/',
         httpOnly: true
     }
 }));
 
-//ejs settings
-//app.set('views', './api/views');
-app.set('views', path.join(__dirname, 'api/views'));
+//configurazione ejs
 app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'api/views'));
 
 //Connessione database mysql
 db = config.database;

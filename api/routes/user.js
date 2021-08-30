@@ -10,6 +10,7 @@ module.exports = function(app, pool, bcrypt)
         res.render('auth/register', {messaggio : "", req: req});
     });
 
+    //Pagina profilo utente
     app.get('/profilo', (req, res) => {
 
         var user;
@@ -37,6 +38,7 @@ module.exports = function(app, pool, bcrypt)
         });
     });
 
+    //Modifica password utente
     app.post('/profilo', (req, res) => {
 
         pool.getConnection((err, connection) => {
@@ -85,6 +87,7 @@ module.exports = function(app, pool, bcrypt)
         res.render('landing', {messaggio: 'utente uscito correttamente', req: req});
     })
 
+    //Login utente
     app.post('/login', (req, res) => {
         if(req.body.email.length == 0 || req.body.password.length == 0)
         {
@@ -127,6 +130,7 @@ module.exports = function(app, pool, bcrypt)
         });
     });
 
+    //Registrazione utente
     app.post('/registrati', (req, res) => {
 
         if(req.body.nome.length == 0 || req.body.cognome.length == 0 || req.body.email.length == 0 || req.body.password.length == 0)
