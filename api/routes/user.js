@@ -48,8 +48,6 @@ module.exports = function(app, pool, bcrypt)
 
             connection.query('SELECT * from MyBooks.Utenti WHERE Email = ?', [req.session.logged_in_email_address], (err, rows) => 
             {
-                connection.release();
-
                 if(rows.length <= 0)
                 {
                     res.render('auth/login', {messaggio : "Utente non trovato", req: req});
@@ -60,22 +58,35 @@ module.exports = function(app, pool, bcrypt)
 
                 var oldPassword = req.body.currentpassword;
 
-                var same = bcrypt.compareSync(oldPassword, rows[0].Password);
-
-                if (same) {
-
-                    const hashedPassword = bcrypt.hashSync(req.body.newpassword, 10);
-
-                    connection.query('UPDATE MyBooks.Utenti SET Password = ? WHERE Email = ?', [hashedPassword, req.session.logged_in_email_address], (err, rows) => {
-                        
-                        res.redirect('/libreria');
-                    });
-                    
-                }else {
-                    res.render('auth/profile', { messaggio: "La password attuale inserita non è corretta", req: req, User: user });
+                if(oldPassword.length == 0 && user.Password.length == 0)
+                {
+                    res.render('auth/profile', {messaggio : "I campi delle password sono vuoti", req: req});
                     return;
                 }
 
+                try{
+                    bcrypt.compare(oldPassword, user.Password).then(function(result) {
+                        if(result)  //se e vero posso procedere con il cambio password
+                        {
+                            bcrypt.hash(req.body.newpassword, 10).then(function(hash) {
+                                
+                                connection.query('UPDATE MyBooks.Utenti SET Password = ? WHERE Email = ?', [hash, req.session.logged_in_email_address], (err, rows) => {
+                                    
+                                    connection.release();
+                                    res.redirect('/libreria');
+                                });
+                            });
+                        }else
+                        {
+                            res.render('auth/profile', { messaggio: "La password attuale inserita non è corretta", req: req, User: user });
+                            return;
+                        }
+                    });
+                }catch(e)
+                {
+                    console.error(e);
+                    return;
+                }
             })
         });
     });
@@ -111,9 +122,29 @@ module.exports = function(app, pool, bcrypt)
                 }
 
                 var idUtente = rows[0].Id;
-
                 var plaintextPassword = req.body.password;
+                var dbPassword = rows[0].Password;
 
+                try{
+                    bcrypt.compare(plaintextPassword, dbPassword).then(function (result) {
+                        if (result) {
+                            req.session.logged_in = true;
+                            req.session.logged_in_email_address = req.body.email;
+                            req.session.logged_in_id = idUtente;
+                            res.redirect('/libreria');
+                        } else {
+                            res.render('auth/login', { messaggio: "Email o password errati", req: req });
+                            return;
+                        }
+                    });
+                }catch(e)
+                {
+                    console.error(e);
+                    return;
+                }
+                
+
+                /*
                 var same = bcrypt.compareSync(plaintextPassword, rows[0].Password);
 
                 if (same) {
@@ -125,6 +156,7 @@ module.exports = function(app, pool, bcrypt)
                     res.render('auth/login', { messaggio: "Email o password errati", req: req });
                     return;
                 }
+                */
 
             })
         });
@@ -139,48 +171,55 @@ module.exports = function(app, pool, bcrypt)
             return;
         }
 
+        if(req.body.password.length < 8)
+        {
+            res.render('auth/register', {messaggio : "La password deve contenere almeno 8 caratteri", req: req});
+            return;
+        }
+
         try{
-            const hashedPassword = bcrypt.hashSync(req.body.password, 10);
+            
+            bcrypt.hash(req.body.password, 10).then(function(hash) {
+                const hashedPassword = hash;
 
-            pool.getConnection((err, connection) => {
-                if (err) {
-                    throw err;
-                }
-    
-                connection.query('SELECT * from MyBooks.Utenti WHERE Email = ?', [req.body.email], (err, rows) => {
-    
+                pool.getConnection((err, connection) => {
                     if (err) {
-                        console.error(err);
+                        throw err;
                     }
-    
-                    if(rows.length <= 0)
-                    {
-                        //l'utente si può registrare
-    
-                        connection.query('INSERT INTO MyBooks.Utenti(Nome, Cognome, Email, Password) VALUES (?, ?, ?, ?);', [req.body.nome, req.body.cognome, req.body.email, hashedPassword], (err, rows) => {
-                            
-                            if (err) {
-                                console.error(err);
-                            }
-                        })
 
-                        connection.query('SELECT * FROM MyBooks.Utenti WHERE Email = ?', [req.body.email], (err, rows) => {
-                            connection.release();
+                    connection.query('SELECT * from MyBooks.Utenti WHERE Email = ?', [req.body.email], (err, rows) => {
 
-                            var idUtente = rows[0].Id;
+                        if (err) {
+                            console.error(err);
+                        }
 
-                            req.session.logged_in = true;
-                            req.session.logged_in_email_address = req.body.email;
-                            req.session.logged_in_id = idUtente;
+                        if (rows.length <= 0) {
+                            //l'utente si può registrare
 
-                            res.redirect('/libreria');
-                        });
-                    }else
-                    {
-                        //l'utente è gia registrato
-                        res.render('auth/register', {messaggio: 'Impossibile completare la registrazione questa email è gia registrata', req: req});
-                    }
-                })
+                            connection.query('INSERT INTO MyBooks.Utenti(Nome, Cognome, Email, Password) VALUES (?, ?, ?, ?);', [req.body.nome, req.body.cognome, req.body.email, hashedPassword], (err, rows) => {
+
+                                if (err) {
+                                    console.error(err);
+                                }
+                            });
+
+                            connection.query('SELECT * FROM MyBooks.Utenti WHERE Email = ?', [req.body.email], (err, data) => {
+                                connection.release();
+
+                                var idUtente = data[0].Id;
+
+                                req.session.logged_in = true;
+                                req.session.logged_in_email_address = req.body.email;
+                                req.session.logged_in_id = idUtente;
+
+                                res.redirect('/libreria');
+                            });
+                        } else {
+                            //l'utente è gia registrato
+                            res.render('auth/register', { messaggio: 'Impossibile completare la registrazione questa email è gia registrata', req: req });
+                        }
+                    })
+                });
             });
 
         }catch(e){
