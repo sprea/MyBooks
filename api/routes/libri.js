@@ -139,7 +139,7 @@ module.exports = function(app, pool, axios)
                 params.Completato = true;
             }
 
-            let autoriString = autori.toString();
+            autori = autori.toString();
 
             axios.get('https://www.googleapis.com/books/v1/volumes/' + googleBookId).then(function (response){
                 var book = response.data;
@@ -157,6 +157,8 @@ module.exports = function(app, pool, axios)
                     genere = 'Genere non trovato';
                 }
 
+                genere = genere.toString();
+
                 pool.getConnection((err, connection) => {
                     if (err) {
                         throw err;
@@ -164,7 +166,7 @@ module.exports = function(app, pool, axios)
 
                     var sql = "INSERT INTO MyBooks.Libri (Isbn, Titolo, Autore, Pagine, Genere, PagineLette, Completato, Impressioni, Valutazione, urlCopertina, Descrizione, Id_Utente) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-                    connection.query(sql, [params.Isbn, titolo, autoriString, pagine, genere, params.PagineLette, params.Completato, params.Impressioni, params.Valutazione, copertina, descrizione, req.session.logged_in_id], (err, rows) => 
+                    connection.query(sql, [params.Isbn, titolo, autori, pagine, genere, params.PagineLette, params.Completato, params.Impressioni, params.Valutazione, copertina, descrizione, req.session.logged_in_id], (err, rows) => 
                     {
                         connection.release();
     
@@ -359,6 +361,8 @@ module.exports = function(app, pool, axios)
     //Funzione ricerca per i libri
     app.get('/libreria/ricerca', requirePageLogin, (req, res) => {
         var titolo = req.query.titolo;
+        var genere = req.query.genere;
+        var autore = req.query.autore;
 
         pool.getConnection((err, connection) => {
             if(err)
@@ -367,10 +371,12 @@ module.exports = function(app, pool, axios)
                 return;
             }
 
-            var sql = "SELECT * from MyBooks.Libri WHERE Titolo LIKE ? AND Id_Utente = ?";
+            var sql = "SELECT * from MyBooks.Libri WHERE Titolo LIKE ? OR Genere LIKE ? OR Autore LIKE ? AND Id_Utente = ?";
             titolo = '%' + titolo + '%';
+            genere = '%' + genere + '%';
+            autore = '%' + autore + '%';
 
-            connection.query(sql, [titolo, req.session.logged_in_id], (err, rows) => {
+            connection.query(sql, [titolo, genere, autore, req.session.logged_in_id], (err, rows) => {
                 
                 if(err)
                 {

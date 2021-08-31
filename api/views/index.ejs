@@ -6,18 +6,35 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Libreria</title>
     <%- include('./partials/navbar'); %>
+    <div class="container" align="left">
+        <h2>Libreria</h2>
+    </div>
 </head>
 <body>
 <div class="container">
-    <div class="title" align="left">
-        <h2>Libreria</h2>
-        <div class="container" align="right">
-            <h4>Condividi la tua libreria</h4>
-            <button type="button" class="btn btn-secondary btn-lg" data-bs-toggle="modal" data-bs-target="#shareModal">
-                Condividi
-            </button>
+        <p>
+            <button id="btnFiltro" class="btn btn-primary" onclick="funzioneFiltro()">Mostra Filtro</button>
+        </p>
+        <div class="form-control" style="display: none;" align="left" id="filtro_condivisione">
+            <br>
+            <h4>Filtra</h4>
+            <form action="/libreria/ricerca" method="GET">
+                <label for="inputGenere">Per genere</label>
+                <input type="text" id="inputGenere" class="form-control" name="genere">
+                <br>
+                <label for="inputAutore">Per autore</label>
+                <input type="text" id="inputAutore" class="form-control" name="autore">
+                <br>
+                <input type="submit" value="Filtra" class="btn btn-primary">
+                <br>
+            </form>
+                <div class="col">
+                    <h4>Condividi la tua libreria</h4>
+                    <button type="button" class="btn btn-secondary btn-lg" data-bs-toggle="modal" data-bs-target="#shareModal">
+                        Condividi
+                    </button>
+                </div>
         </div>
-    </div>
 
     <% if(errore.length != 0) {%>
         <div class="alert alert-warning alert-dismissible fade show" role="alert">
@@ -38,11 +55,12 @@
                         <div class="modal-body">
                             Condividi questo <a href="/libreria/<%= req.session.logged_in_id %>/condividi/">link</a> 
                             tramite email o messaggio per mostrare la tua libreria digitale
+                            <br>
+                            Link condivisione: 
                             <input disabled type="text" name="sharelink" id="sharelinktext" value="/libreria/<%= req.session.logged_in_id %>/condividi/">
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Chiudi</button>
-                            <button onclick="copyShareLink()" class="btn btn-primary">Copia link</button>
                         </div>
                     </div>
                 </div>
@@ -136,15 +154,17 @@
     <% } %>
 </div>
 <script>
-    function copyShareLink()
+    function funzioneFiltro()
     {
-        var link = document.getElementById('sharelinktext');
-
-        link.select();
-
-        link.setSelectionRange(0, 99999); /* For mobile devices */
-
-        navigator.clipboard.writeText(link.value);
+        var filtroMenu = document.getElementById("filtro_condivisione");
+        var btn = document.getElementById("btnFiltro");
+        if (filtroMenu.style.display == "none") {
+            btn.innerHTML = "Nascondi filtro"
+            filtroMenu.style.display = "block";
+        } else {
+            btn.innerHTML = "Attiva filtro"
+            filtroMenu.style.display = "none";
+        }
     }
 </script>
 </body>
