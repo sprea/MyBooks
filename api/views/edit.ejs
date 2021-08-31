@@ -43,6 +43,7 @@
                 <div class="form-group col-md-6">
                     <label for="inputValutazione">Valutazione</label>
                     <select id="inputValutazione" class="form-select" name="Valutazione">
+                        <option selected value="<%= Valutazione %>"><%= Valutazione %> (valutazione precedente)</option>
                         <option value="0">0 (non ancora valutato)</option>
                         <option value="1">1 (non mi è piaciuto)</option>
                         <option value="2">2</option>
@@ -56,6 +57,9 @@
             <div class="form-group">
                 <label for="completo">Completato?</label>
                 <select id="completo" class="form-select" name="Completato">
+                    <option selected value="<%= Completato %>">
+                        <% if(Completato == false){ %> no <% }else{ %> si <% } %> (scelta precedente)
+                    </option>
                     <option value="0">no</option>
                     <option value="1">si</option>
                 </select>

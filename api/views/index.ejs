@@ -11,6 +11,12 @@
 <div class="container">
     <div class="title" align="left">
         <h2>Libreria</h2>
+        <div class="container" align="right">
+            <h4>Condividi la tua libreria</h4>
+            <button type="button" class="btn btn-secondary btn-lg" data-bs-toggle="modal" data-bs-target="#shareModal">
+                Condividi
+            </button>
+        </div>
     </div>
 
     <% if(errore.length != 0) {%>
@@ -22,12 +28,6 @@
 
     <% if(libri.length > 0) { %>
     <div class="row" style="padding-top: 30px; padding-left: 10px; padding-right: 10px;">
-        <div class="container" align="right">
-            <h4>Condividi la tua libreria</h4>
-            <button type="button" class="btn btn-secondary btn-lg" data-bs-toggle="modal" data-bs-target="#shareModal">
-                Condividi
-            </button>
-        </div>
             <div class="modal fade" id="shareModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
@@ -79,6 +79,8 @@
                                         </p>
                                         <br>
                                         <dl class="row">
+                                            <dt class="col-sm-3">Genere</dt>
+                                            <dd class="col-sm-9"><%= libro.Genere %></dd>
                                             <dt class="col-sm-3">Pagine Lette</dt>
                                             <dd class="col-sm-9"><%= libro.PagineLette %> di <%= libro.Pagine %></dd>
                                         

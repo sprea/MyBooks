@@ -106,12 +106,20 @@ module.exports = function(app, pool, axios)
         var googleBooksApiUrl = "https://www.googleapis.com/books/v1/volumes?q=isbn:" + params.Isbn;
 
         axios.get(googleBooksApiUrl).then(function (response){
+
+            if(response.data.totalItems <= 0)
+            {
+                res.render('add', {errore: 'Libro non trovato...', req: req});
+                return;
+            }
+
             var book = response.data.items[0];
             var googleBookId = response.data.items[0].id;
             var titolo = (book["volumeInfo"]["title"]);
             var autori = (book["volumeInfo"]["authors"]);
             var pagine = (book["volumeInfo"]["pageCount"]);
             var descrizione = null;
+            var genere = null;
             var copertina = (book["volumeInfo"]["imageLinks"]["thumbnail"]);
 
             if(params.PagineLette > pagine)
@@ -137,10 +145,16 @@ module.exports = function(app, pool, axios)
                 var book = response.data;
 
                 descrizione = (book["volumeInfo"]["description"]);
+                genere = (book["volumeInfo"]["categories"]);
 
                 if(descrizione == null)
                 {
                     descrizione = 'Descrizione non trovata';
+                }
+
+                if(genere == null)
+                {
+                    genere = 'Genere non trovato';
                 }
 
                 pool.getConnection((err, connection) => {
@@ -148,9 +162,9 @@ module.exports = function(app, pool, axios)
                         throw err;
                     }
 
-                    var sql = "INSERT INTO MyBooks.Libri (Isbn, Titolo, Autore, Pagine, PagineLette, Completato, Impressioni, Valutazione, urlCopertina, Descrizione, Id_Utente) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                    var sql = "INSERT INTO MyBooks.Libri (Isbn, Titolo, Autore, Pagine, Genere, PagineLette, Completato, Impressioni, Valutazione, urlCopertina, Descrizione, Id_Utente) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-                    connection.query(sql, [params.Isbn, titolo, autoriString, pagine, params.PagineLette, params.Completato, params.Impressioni, params.Valutazione, copertina, descrizione, req.session.logged_in_id], (err, rows) => 
+                    connection.query(sql, [params.Isbn, titolo, autoriString, pagine, genere, params.PagineLette, params.Completato, params.Impressioni, params.Valutazione, copertina, descrizione, req.session.logged_in_id], (err, rows) => 
                     {
                         connection.release();
     
