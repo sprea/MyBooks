@@ -93,14 +93,12 @@ module.exports = function(app, pool, axios)
 
         if(params.length === 0)
         {
-            res.status(500);
             res.render('add', {errore: 'Impossibile aggiungere il libro', req: req});
             return;
         }
 
         if(params.Isbn.length > 13 || params.Isbn.length < 13)
         {
-            res.status(500);
             res.render('add', {errore: 'Isbn non valido', req: req});
             return;
         }
@@ -118,14 +116,12 @@ module.exports = function(app, pool, axios)
 
             if(params.PagineLette > pagine)
             {
-                res.status(500);
                 res.render('add', {errore: 'Il libro ha meno pagine di quelle lette', req: req});
                 return;
             }
 
             if(params.PagineLette < 0)
             {
-                res.status(500);
                 res.render('add', {errore: 'Pagine lette negative', req: req});
                 return;
             }
@@ -238,14 +234,12 @@ module.exports = function(app, pool, axios)
 
         if(paginelette.length === 0)
         {
-            res.status(500);
             res.render('edit', {errore: 'Inserisci un valore nelle pagine lette', Isbn: id, req: req});
             return;
         }
 
         if(paginelette > pagine)
         {
-            res.status(500);
             res.render('edit', {
                 errore: 'Il libro ha meno pagine di quelle lette', 
                 Isbn: id,
@@ -261,7 +255,6 @@ module.exports = function(app, pool, axios)
 
         if(paginelette < 0)
         {
-            res.status(500);
             res.render('edit', {
                 errore: 'Pagine lette negative',
                 Isbn: id,
@@ -343,6 +336,7 @@ module.exports = function(app, pool, axios)
                     console.error(err);
                 }
 
+                console.log('Libro con isbn: ' + id + ' eliminato')
                 res.redirect('/libreria');
             })
         })

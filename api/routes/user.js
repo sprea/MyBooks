@@ -148,7 +148,6 @@ module.exports = function(app, pool, bcrypt)
                 }
     
                 connection.query('SELECT * from MyBooks.Utenti WHERE Email = ?', [req.body.email], (err, rows) => {
-                    connection.release();
     
                     if (err) {
                         console.error(err);
@@ -157,53 +156,36 @@ module.exports = function(app, pool, bcrypt)
                     if(rows.length <= 0)
                     {
                         //l'utente si può registrare
-
-                        pool.getConnection((err, connection) => {
-                            if(err)
-                            {
-                                throw err;
-                            }
     
-                            connection.query('INSERT INTO MyBooks.Utenti(Nome, Cognome, Email, Password) VALUES (?, ?, ?, ?);', [req.body.nome, req.body.cognome, req.body.email, hashedPassword], (err, rows) => {
-                                connection.release();
-
-                                if(err)
-                                {
-                                    console.error(err);
-                                }
-                            })
-                        });
-
-                        pool.getConnection((err, connection) => {
-
-                            if(err)
-                            {
-                                throw err;
+                        connection.query('INSERT INTO MyBooks.Utenti(Nome, Cognome, Email, Password) VALUES (?, ?, ?, ?);', [req.body.nome, req.body.cognome, req.body.email, hashedPassword], (err, rows) => {
+                            
+                            if (err) {
+                                console.error(err);
                             }
+                        })
 
-                            connection.query('SELECT * FROM MyBooks.Utenti WHERE Email = ?', [req.body.email], (err, rows) => {
-                                connection.release();
+                        connection.query('SELECT * FROM MyBooks.Utenti WHERE Email = ?', [req.body.email], (err, rows) => {
+                            connection.release();
 
-                                var idUtente = rows[0].Id;
+                            var idUtente = rows[0].Id;
 
-                                req.session.logged_in = true;
-                                req.session.logged_in_email_address = req.body.email;
-                                req.session.logged_in_id = idUtente;
+                            req.session.logged_in = true;
+                            req.session.logged_in_email_address = req.body.email;
+                            req.session.logged_in_id = idUtente;
 
-                                res.redirect('/libreria');
-                            });
+                            res.redirect('/libreria');
                         });
                     }else
                     {
                         //l'utente è gia registrato
-    
                         res.render('auth/register', {messaggio: 'Impossibile completare la registrazione questa email è gia registrata', req: req});
                     }
                 })
             });
 
-        }catch{
-            res.redirect('/registrati');
+        }catch(e){
+            console.error(e);
+            return;
         }
 
     });
