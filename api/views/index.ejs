@@ -12,29 +12,13 @@
 </head>
 <body>
 <div class="container">
-        <p>
-            <button id="btnFiltro" class="btn btn-primary" onclick="funzioneFiltro()">Mostra Filtro</button>
-        </p>
-        <div class="form-control" style="display: none;" align="left" id="filtro_condivisione">
-            <br>
-            <h4>Filtra</h4>
-            <form action="/libreria/ricerca" method="GET">
-                <label for="inputGenere">Per genere</label>
-                <input type="text" id="inputGenere" class="form-control" name="genere">
-                <br>
-                <label for="inputAutore">Per autore</label>
-                <input type="text" id="inputAutore" class="form-control" name="autore">
-                <br>
-                <input type="submit" value="Filtra" class="btn btn-primary">
-                <br>
-            </form>
-                <div class="col">
-                    <h4>Condividi la tua libreria</h4>
-                    <button type="button" class="btn btn-secondary btn-lg" data-bs-toggle="modal" data-bs-target="#shareModal">
-                        Condividi
-                    </button>
-                </div>
-        </div>
+        
+    <p>
+        <h4>Condividi la tua libreria</h4>
+        <button type="button" class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#shareModal">
+            Condividi
+        </button>
+    </p>
 
     <% if(errore.length != 0) {%>
         <div class="alert alert-warning alert-dismissible fade show" role="alert">
@@ -153,19 +137,5 @@
         </div>
     <% } %>
 </div>
-<script>
-    function funzioneFiltro()
-    {
-        var filtroMenu = document.getElementById("filtro_condivisione");
-        var btn = document.getElementById("btnFiltro");
-        if (filtroMenu.style.display == "none") {
-            btn.innerHTML = "Nascondi filtro"
-            filtroMenu.style.display = "block";
-        } else {
-            btn.innerHTML = "Attiva filtro"
-            filtroMenu.style.display = "none";
-        }
-    }
-</script>
 </body>
 </html>

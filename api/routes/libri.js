@@ -90,6 +90,8 @@ module.exports = function(app, pool, axios)
     app.post('/libreria/aggiungi', requirePageLogin, (req, res) => {
 
         const params = req.body;
+        
+        var alreadyIn = false;
 
         if(params.length === 0)
         {
@@ -164,22 +166,42 @@ module.exports = function(app, pool, axios)
                         throw err;
                     }
 
-                    var sql = "INSERT INTO MyBooks.Libri (Isbn, Titolo, Autore, Pagine, Genere, PagineLette, Completato, Impressioni, Valutazione, urlCopertina, Descrizione, Id_Utente) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                    connection.query("SELECT * FROM MyBooks.Libri WHERE Isbn = ? AND Id_Utente = ?", [params.Isbn, req.session.logged_in_id], (err, rows) => {
 
-                    connection.query(sql, [params.Isbn, titolo, autori, pagine, genere, params.PagineLette, params.Completato, params.Impressioni, params.Valutazione, copertina, descrizione, req.session.logged_in_id], (err, rows) => 
-                    {
-                        connection.release();
-    
-                        if (err) {
+                        if(err)
+                        {
                             console.error(err);
-                            res.render('add', {errore: 'Errore generico', req: req});
-                            return;
                         }
-    
-                        console.log('Libro con isbn: ' + params.Isbn + ' aggiunto');
-    
-                        res.redirect('/libreria');
-                    })
+
+                        if(rows.length > 0)
+                        {
+                            alreadyIn = true;
+                        }
+
+                        if (alreadyIn) {
+                            res.render('add', { errore: 'Libro già inserito nella libreria', req: req });
+                            res.end();
+                            return;
+                        }else
+                        {
+                            var sql = "INSERT INTO MyBooks.Libri (Isbn, Titolo, Autore, Pagine, Genere, PagineLette, Completato, Impressioni, Valutazione, urlCopertina, Descrizione, Id_Utente) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                        
+                            connection.query(sql, [params.Isbn, titolo, autori, pagine, genere, params.PagineLette, params.Completato, params.Impressioni, params.Valutazione, copertina, descrizione, req.session.logged_in_id], (err, rows) => 
+                            {
+                                connection.release();
+            
+                                if (err) {
+                                    console.error(err);
+                                    res.render('add', {errore: 'Errore generico', req: req});
+                                    return;
+                                }
+            
+                                console.log('Libro con isbn: ' + params.Isbn + ' aggiunto');
+            
+                                res.redirect('/libreria');
+                            });
+                        }
+                    });
                 });
                 console.log("Chiamata a google books api effettuata");
             }).catch(function (error){
@@ -360,31 +382,78 @@ module.exports = function(app, pool, axios)
 
     //Funzione ricerca per i libri
     app.get('/libreria/ricerca', requirePageLogin, (req, res) => {
-        var titolo = req.query.titolo;
-        var genere = req.query.genere;
-        var autore = req.query.autore;
+        
+        var ricerca = req.query.ricerca;
+
+        if(ricerca.length == 0)
+        {
+            res.redirect('/libreria');
+            return;
+        }
+
+        ricerca = '%' + ricerca + '%';
 
         pool.getConnection((err, connection) => {
+            
             if(err)
             {
                 res.redirect('/libreria');
                 return;
             }
 
-            var sql = "SELECT * from MyBooks.Libri WHERE Titolo LIKE ? OR Genere LIKE ? OR Autore LIKE ? AND Id_Utente = ?";
-            titolo = '%' + titolo + '%';
-            genere = '%' + genere + '%';
-            autore = '%' + autore + '%';
+            var ricercaTitolo = "SELECT * from MyBooks.Libri WHERE Titolo LIKE ? AND Id_Utente = ?"
+            var ricercaGenere = "SELECT * from MyBooks.Libri WHERE Genere LIKE ? AND Id_Utente = ?"
+            var ricercaAutore = "SELECT * from MyBooks.Libri WHERE Autore LIKE ? AND Id_Utente = ?"
 
-            connection.query(sql, [titolo, genere, autore, req.session.logged_in_id], (err, rows) => {
-                
+            
+            connection.query(ricercaTitolo, [ricerca, req.session.logged_in_id], (err, rows) => {
+
                 if(err)
                 {
                     console.error(err);
                 }
 
-                res.render('search', {libri: rows, n: rows.length, req: req});
-            })
+                if(rows.length <= 0)
+                {
+                    connection.query(ricercaGenere, [ricerca, req.session.logged_in_id], (err, rows) => {
+
+                        if (err) {
+                            console.error(err);
+                        }
+
+                        if(rows.length <= 0)
+                        {
+                            connection.query(ricercaAutore, [ricerca, req.session.logged_in_id], (err, rows) => {
+                                if (err) {
+                                    console.error(err);
+                                }
+
+                                connection.release();
+
+                                if(rows.length <= 0)
+                                {
+                                    res.render('search', {n: rows.length, req: req});
+                                    return;
+                                }else
+                                {
+                                    res.render('search', {libri: rows, n: rows.length, req: req});
+                                    return;
+                                }
+
+                            });
+                        }else
+                        {
+                            res.render('search', {libri: rows, n: rows.length, req: req});
+                            return;
+                        }
+
+                    });
+                }else
+                {
+                    res.render('search', {libri: rows, n: rows.length, req: req});
+                    return;
+                }
+            });
         })
 
     });
