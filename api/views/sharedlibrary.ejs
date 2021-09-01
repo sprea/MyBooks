@@ -14,74 +14,80 @@
 <body>
 <div class="container">
     <div class="row" style="padding-top: 30px; padding-left: 10px; padding-right: 10px;">
-        <% libri.forEach(libro => { %>
-            <div class="col">
-                <div class="card" style="width: 18rem;">
-                    <img class="card-img-top" src="<%= libro.urlCopertina %>" alt="Card image cap" width="230" height="450">
-                    <div class="card-body">
-                        <h5 class="card-title">
-                            <%= libro.Titolo %>
-                        </h5>
-                        <h6 class="card-subtitle mb-2 text-muted">
-                            <%= libro.Autore %>
-                        </h6>
+        <% if(libri.length > 0) { %>
+            <% libri.forEach(libro => { %>
+                <div class="col">
+                    <div class="card" style="width: 18rem;">
+                        <img class="card-img-top" src="<%= libro.urlCopertina %>" alt="Card image cap" width="230" height="450">
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                <%= libro.Titolo %>
+                            </h5>
+                            <h6 class="card-subtitle mb-2 text-muted">
+                                <%= libro.Autore %>
+                            </h6>
 
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="<%= '#n' + libro.Isbn %>">
-                            Dettagli
-                        </button>
-                        
-                        <div class="modal fade" id="<%= 'n' + libro.Isbn %>" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-                            aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="staticBackdropLabel">
-                                            <%= libro.Titolo %>
-                                        </h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <p>
-                                            <%= libro.Descrizione %>
-                                        </p>
-                                        <br>
-                                        <dl class="row">
-                                            <dt class="col-sm-3">Pagine Lette</dt>
-                                            <dd class="col-sm-9"><%= libro.PagineLette %> di <%= libro.Pagine %></dd>
-                                        
-                                            <dt class="col-sm-3">Completato</dt>
-                                            <dd class="col-sm-9">
-                                                <% if(libro.Completato){%> <p>Si</p> <% }else{ %> <p>No</p> <% } %>
-                                            </dd>
-                                        
-                                            <dt class="col-sm-3">Impressioni</dt>
-                                            <dd class="col-sm-9"><% if(libro.Impressioni === ''){%> <p>Ancora niente...</p> <% }else{ %> <%= libro.Impressioni %> <% } %></dd>
-                                        
-                                            <dt class="col-sm-3">Valutazione</dt>
-                                            <dd class="col-sm-9">
-                                                <% if(libro.Valutazione == 0){ %>
+                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="<%= '#n' + libro.Isbn %>">
+                                Dettagli
+                            </button>
+                            
+                            <div class="modal fade" id="<%= 'n' + libro.Isbn %>" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+                                aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="staticBackdropLabel">
+                                                <%= libro.Titolo %>
+                                            </h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p>
+                                                <%= libro.Descrizione %>
+                                            </p>
+                                            <br>
+                                            <dl class="row">
+                                                <dt class="col-sm-3">Pagine Lette</dt>
+                                                <dd class="col-sm-9"><%= libro.PagineLette %> di <%= libro.Pagine %></dd>
+                                            
+                                                <dt class="col-sm-3">Completato</dt>
+                                                <dd class="col-sm-9">
+                                                    <% if(libro.Completato){%> <p>Si</p> <% }else{ %> <p>No</p> <% } %>
+                                                </dd>
+                                            
+                                                <dt class="col-sm-3">Impressioni</dt>
+                                                <dd class="col-sm-9"><% if(libro.Impressioni === ''){%> <p>Ancora niente...</p> <% }else{ %> <%= libro.Impressioni %> <% } %></dd>
+                                            
+                                                <dt class="col-sm-3">Valutazione</dt>
+                                                <dd class="col-sm-9">
+                                                    <% if(libro.Valutazione == 0){ %>
 
-                                                    <%= libro.Valutazione %> (Non ancora valutato)
-                                                <% }else if(libro.Valutazione == 5){ %>
-                                                    <%= libro.Valutazione %> (Mi e' piaciuto molto)
-                                                <% }else if(libro.Valutazione == 1){ %>
-                                                    <%= libro.Valutazione %> (non mi è piaciuto)
-                                                <% }else{ %>
-                                                    <%= libro.Valutazione %>
-                                                <% } %>
-                                            </dd>
-                                        </dl>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Chiudi</button>
+                                                        <%= libro.Valutazione %> (Non ancora valutato)
+                                                    <% }else if(libro.Valutazione == 5){ %>
+                                                        <%= libro.Valutazione %> (Mi e' piaciuto molto)
+                                                    <% }else if(libro.Valutazione == 1){ %>
+                                                        <%= libro.Valutazione %> (non mi è piaciuto)
+                                                    <% }else{ %>
+                                                        <%= libro.Valutazione %>
+                                                    <% } %>
+                                                </dd>
+                                            </dl>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Chiudi</button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+            <% }) %>
+        <% }else{ %>
+            <div class="subtitle" align="center">
+                <h2>Ancora nessun libro inserito</h2>
             </div>
-        <% }) %>
+        <% } %>
     </div>
 </div>
 </body>

@@ -64,6 +64,12 @@ module.exports = function(app, pool, bcrypt)
                     return;
                 }
 
+                if(req.body.newpassword.length < 8)
+                {
+                    res.render('auth/profile', {messaggio: "La nuova password deve contenere almento 8 caratteri", req: req, User: user});
+                    return;
+                }
+
                 try{
                     bcrypt.compare(oldPassword, user.Password).then(function(result) {
                         if(result)  //se e vero posso procedere con il cambio password

@@ -19,6 +19,26 @@
             Condividi
         </button>
     </p>
+    <div class="modal fade" id="shareModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Condividi la tua libreria</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Condividi questo <a href="/libreria/<%= req.session.logged_in_id %>/condividi/">link</a> 
+                    tramite email o messaggio per mostrare la tua libreria digitale
+                    <br>
+                    Link condivisione: 
+                    <input disabled type="text" name="sharelink" id="sharelinktext" value="/libreria/<%= req.session.logged_in_id %>/condividi/">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Chiudi</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <% if(errore.length != 0) {%>
         <div class="alert alert-warning alert-dismissible fade show" role="alert">
@@ -29,26 +49,6 @@
 
     <% if(libri.length > 0) { %>
     <div class="row" style="padding-top: 30px; padding-left: 10px; padding-right: 10px;">
-            <div class="modal fade" id="shareModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">Condividi la tua libreria</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            Condividi questo <a href="/libreria/<%= req.session.logged_in_id %>/condividi/">link</a> 
-                            tramite email o messaggio per mostrare la tua libreria digitale
-                            <br>
-                            Link condivisione: 
-                            <input disabled type="text" name="sharelink" id="sharelinktext" value="/libreria/<%= req.session.logged_in_id %>/condividi/">
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Chiudi</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
         <% libri.forEach(libro => { %>
             <div class="col">
                 <div class="card" style="width: 18rem;">
