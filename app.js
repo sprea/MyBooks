@@ -23,11 +23,9 @@ var forceSSL = function(req, res, next){
 }
 
 //redirigo il traffico su HTTPS
-app.configure(function (){
-    if(env === 'production'){
-        app.use(forceSSL);
-    }
-})
+if (env === 'production') {
+    app.use(forceSsl);
+}
 
 //L'api risponde in formato json
 app.use(express.json())
