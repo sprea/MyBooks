@@ -8,10 +8,26 @@ const session = require('cookie-session');
 const cookieParser = require('cookie-parser');
 require('dotenv').config();
 
+var env = process.env.NODE_ENV || 'development';
+
 var app = express();
 const porta = process.env.PORT || 5000;
 const config = require('./db.config');
 
+var forceSSL = function(req, res, next){
+    if(req.headers['x-forwarded-proto'] !== 'https'){
+        return res.redirect(['https://', req.get('Host'), req.url].join(''));
+    }
+
+    return next();
+}
+
+//redirigo il traffico su HTTPS
+app.configure(function (){
+    if(env === 'production'){
+        app.use(forceSSL);
+    }
+})
 
 //L'api risponde in formato json
 app.use(express.json())
