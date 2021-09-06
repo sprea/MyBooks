@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyBooks</title>
+    <%- include('./partials/navbar'); %>
+</head>
+<body>
+    <div id="home" align="center">
+        <div class="container-fluid" style="padding-top: 12px;">
+             <% if(messaggio.length != 0) { %>
+                <div class="alert alert-success alert-dismissible fade show" role="alert" style="width: 600px;">
+                    <%= messaggio %>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            <% } %>
+        </div>
+       
+        <h1>Benvenuti su MyBooks</h1>
+
+        <div class="container">
+            <h3 align="left">Per iniziare ad usare l'app:</h3>
+            <div class="list-group">
+                <a href="/registrati" class="list-group-item">
+                    <h4 class="list-group-item-heading">Registrati</h4>
+                    <p class="list-group-item-text">Registrati al sito inserendo email e password 
+                        (clicca qui per andare alla pagina di registrazione) </p>
+                </a>
+                <a href="/login" class="list-group-item">
+                    <h4 class="list-group-item-heading">Accedi</h4>
+                    <p class="list-group-item-text">Dopo la registrazione dovrai solamente accedere con le tue credenziali</p>
+                </a>
+                <a href="/libreria/aggiungi" class="list-group-item">
+                    <h4 class="list-group-item-heading">Aggiungi un libro</h4>
+                    <p class="list-group-item-text">Aggiungi il tuo primo libro inserendo i dati richiesti nel form</p>
+                </a>
+                <a href="/libreria" class="list-group-item">
+                    <h4 class="list-group-item-heading">Sfoglia la tua libreria digitale</h4>
+                    <p class="list-group-item-text">Potrai tenere traccia dei tuoi volumi nella libreria e condividerli con i tuoi amici</p>
+                </a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

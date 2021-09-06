@@ -20,7 +20,7 @@ module.exports = function(app, pool, bcrypt)
                 throw err;
             }
 
-            connection.query('SELECT * from MyBooks.Utenti WHERE Email = ?', [req.session.logged_in_email_address], (err, rows) => 
+            connection.query('SELECT * from heroku_9a2800c73c30d21.Utenti WHERE Email = ?', [req.session.logged_in_email_address], (err, rows) => 
             {
                 connection.release();
 
@@ -46,7 +46,7 @@ module.exports = function(app, pool, bcrypt)
                 throw err;
             }
 
-            connection.query('SELECT * from MyBooks.Utenti WHERE Email = ?', [req.session.logged_in_email_address], (err, rows) => 
+            connection.query('SELECT * from heroku_9a2800c73c30d21.Utenti WHERE Email = ?', [req.session.logged_in_email_address], (err, rows) => 
             {
                 if(rows.length <= 0)
                 {
@@ -76,7 +76,7 @@ module.exports = function(app, pool, bcrypt)
                         {
                             bcrypt.hash(req.body.newpassword, 10).then(function(hash) {
                                 
-                                connection.query('UPDATE MyBooks.Utenti SET Password = ? WHERE Email = ?', [hash, req.session.logged_in_email_address], (err, rows) => {
+                                connection.query('UPDATE heroku_9a2800c73c30d21.Utenti SET Password = ? WHERE Email = ?', [hash, req.session.logged_in_email_address], (err, rows) => {
                                     
                                     connection.release();
                                     res.redirect('/libreria');
@@ -99,7 +99,7 @@ module.exports = function(app, pool, bcrypt)
 
     //Logout utente
     app.post('/logout', (req, res) => {
-        req.session.destroy(null);
+        req.session = null;
         res.clearCookie(this.cookie, { path: '/'});
         res.render('landing', {messaggio: 'utente uscito correttamente', req: req});
     })
@@ -117,7 +117,7 @@ module.exports = function(app, pool, bcrypt)
                 throw err;
             }
 
-            connection.query('SELECT * from MyBooks.Utenti WHERE Email = ?', [req.body.email], (err, rows) => 
+            connection.query('SELECT * from heroku_9a2800c73c30d21.Utenti WHERE Email = ?', [req.body.email], (err, rows) => 
             {
                 connection.release();
 
@@ -193,7 +193,7 @@ module.exports = function(app, pool, bcrypt)
                         throw err;
                     }
 
-                    connection.query('SELECT * from MyBooks.Utenti WHERE Email = ?', [req.body.email], (err, rows) => {
+                    connection.query('SELECT * from heroku_9a2800c73c30d21.Utenti WHERE Email = ?', [req.body.email], (err, rows) => {
 
                         if (err) {
                             console.error(err);
@@ -202,14 +202,14 @@ module.exports = function(app, pool, bcrypt)
                         if (rows.length <= 0) {
                             //l'utente si può registrare
 
-                            connection.query('INSERT INTO MyBooks.Utenti(Nome, Cognome, Email, Password) VALUES (?, ?, ?, ?);', [req.body.nome, req.body.cognome, req.body.email, hashedPassword], (err, rows) => {
+                            connection.query('INSERT INTO heroku_9a2800c73c30d21.Utenti(Nome, Cognome, Email, Password) VALUES (?, ?, ?, ?);', [req.body.nome, req.body.cognome, req.body.email, hashedPassword], (err, rows) => {
 
                                 if (err) {
                                     console.error(err);
                                 }
                             });
 
-                            connection.query('SELECT * FROM MyBooks.Utenti WHERE Email = ?', [req.body.email], (err, data) => {
+                            connection.query('SELECT * FROM heroku_9a2800c73c30d21.Utenti WHERE Email = ?', [req.body.email], (err, data) => {
                                 connection.release();
 
                                 var idUtente = data[0].Id;

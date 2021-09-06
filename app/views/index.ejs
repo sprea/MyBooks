@@ -27,11 +27,11 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    Condividi questo <a href="/libreria/<%= req.session.logged_in_id %>/condividi/">link</a> 
+                    Condividi questo <a href="https://mybookset.herokuapp.com/libreria/<%= req.session.logged_in_id %>/condividi/">link</a> 
                     tramite email o messaggio per mostrare la tua libreria digitale
                     <br>
                     Link condivisione: 
-                    <input disabled type="text" name="sharelink" id="sharelinktext" value="/libreria/<%= req.session.logged_in_id %>/condividi/">
+                    <input disabled type="text" name="sharelink" id="sharelinktext" value="https://mybookset.herokuapp.com/libreria/<%= req.session.logged_in_id %>/condividi/">
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Chiudi</button>

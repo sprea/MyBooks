@@ -28,7 +28,7 @@ module.exports = function(app, pool, axios)
                 throw err;
             }
 
-            connection.query('SELECT Nome, Cognome, Email FROM Utenti WHERE Id = ?', [Idutente], (err, rows) => {
+            connection.query('SELECT Nome, Cognome, Email FROM heroku_9a2800c73c30d21.Utenti WHERE Id = ?', [Idutente], (err, rows) => {
                
 
                 if(err)
@@ -43,7 +43,7 @@ module.exports = function(app, pool, axios)
                 }else
                 {
                     Utente = rows[0];
-                    connection.query('SELECT * FROM Libri WHERE Id_Utente = ?', [Idutente], (err, rows) => {
+                    connection.query('SELECT * FROM heroku_9a2800c73c30d21.Libri WHERE Id_Utente = ?', [Idutente], (err, rows) => {
                         connection.release();
 
                         if (err) {
@@ -66,7 +66,7 @@ module.exports = function(app, pool, axios)
                 throw err;
             }
 
-            connection.query('SELECT * FROM Libri WHERE Id_Utente = ?', [req.session.logged_in_id], (err, rows) => 
+            connection.query('SELECT * FROM heroku_9a2800c73c30d21.Libri WHERE Id_Utente = ?', [req.session.logged_in_id], (err, rows) => 
             {
                 connection.release();
 
@@ -166,7 +166,7 @@ module.exports = function(app, pool, axios)
                         throw err;
                     }
 
-                    connection.query("SELECT * FROM MyBooks.Libri WHERE Isbn = ? AND Id_Utente = ?", [params.Isbn, req.session.logged_in_id], (err, rows) => {
+                    connection.query("SELECT * FROM heroku_9a2800c73c30d21.Libri WHERE Isbn = ? AND Id_Utente = ?", [params.Isbn, req.session.logged_in_id], (err, rows) => {
 
                         if(err)
                         {
@@ -184,7 +184,7 @@ module.exports = function(app, pool, axios)
                             return;
                         }else
                         {
-                            var sql = "INSERT INTO MyBooks.Libri (Isbn, Titolo, Autore, Pagine, Genere, PagineLette, Completato, Impressioni, Valutazione, urlCopertina, Descrizione, Id_Utente) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                            var sql = "INSERT INTO heroku_9a2800c73c30d21.Libri (Isbn, Titolo, Autore, Pagine, Genere, PagineLette, Completato, Impressioni, Valutazione, urlCopertina, Descrizione, Id_Utente) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
                         
                             connection.query(sql, [params.Isbn, titolo, autori, pagine, genere, params.PagineLette, params.Completato, params.Impressioni, params.Valutazione, copertina, descrizione, req.session.logged_in_id], (err, rows) => 
                             {
@@ -231,7 +231,7 @@ module.exports = function(app, pool, axios)
                 throw err;
             }
 
-            connection.query('SELECT * FROM Libri where Isbn = ? AND Id_Utente = ?', [id, req.session.logged_in_id], (err, rows) => 
+            connection.query('SELECT * FROM heroku_9a2800c73c30d21.Libri where Isbn = ? AND Id_Utente = ?', [id, req.session.logged_in_id], (err, rows) => 
             {
                 connection.release();
 
@@ -311,7 +311,7 @@ module.exports = function(app, pool, axios)
             completato = true;
         }
     
-        var sql = 'UPDATE MyBooks.Libri SET PagineLette = ?, Completato = ?, Impressioni = ?, Valutazione = ? WHERE Isbn = ? AND Id_Utente = ?;'
+        var sql = 'UPDATE heroku_9a2800c73c30d21.Libri SET PagineLette = ?, Completato = ?, Impressioni = ?, Valutazione = ? WHERE Isbn = ? AND Id_Utente = ?;'
 
         pool.getConnection((err, connection) => {
             
@@ -365,7 +365,7 @@ module.exports = function(app, pool, axios)
                 return;
             }
 
-            var sql = 'DELETE FROM MyBooks.Libri WHERE Isbn = ? AND Id_Utente = ?;'
+            var sql = 'DELETE FROM heroku_9a2800c73c30d21.Libri WHERE Isbn = ? AND Id_Utente = ?;'
 
             connection.query(sql, [id, req.session.logged_in_id], (err, rows) => {
                 
@@ -401,9 +401,9 @@ module.exports = function(app, pool, axios)
                 return;
             }
 
-            var ricercaTitolo = "SELECT * from MyBooks.Libri WHERE Titolo LIKE ? AND Id_Utente = ?"
-            var ricercaGenere = "SELECT * from MyBooks.Libri WHERE Genere LIKE ? AND Id_Utente = ?"
-            var ricercaAutore = "SELECT * from MyBooks.Libri WHERE Autore LIKE ? AND Id_Utente = ?"
+            var ricercaTitolo = "SELECT * from heroku_9a2800c73c30d21.Libri WHERE Titolo LIKE ? AND Id_Utente = ?"
+            var ricercaGenere = "SELECT * from heroku_9a2800c73c30d21.Libri WHERE Genere LIKE ? AND Id_Utente = ?"
+            var ricercaAutore = "SELECT * from heroku_9a2800c73c30d21.Libri WHERE Autore LIKE ? AND Id_Utente = ?"
 
             
             connection.query(ricercaTitolo, [ricerca, req.session.logged_in_id], (err, rows) => {
