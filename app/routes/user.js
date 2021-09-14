@@ -1,5 +1,17 @@
 module.exports = function(app, pool, bcrypt)
 {
+    require('dotenv').config();
+    var env = process.env.NODE_ENV;
+    var db;
+
+    if(env === 'production')
+    {
+        db = process.env.DB_NAME;
+    }else
+    {
+        db = process.env.DB_NAME_DEV;
+    }
+
     //Pagina login
     app.get('/login', (req, res) => {
         res.render('auth/login', {messaggio : "", req: req});
@@ -20,7 +32,7 @@ module.exports = function(app, pool, bcrypt)
                 throw err;
             }
 
-            connection.query('SELECT * from heroku_9a2800c73c30d21.Utenti WHERE Email = ?', [req.session.logged_in_email_address], (err, rows) => 
+            connection.query('SELECT * from ' + db + '.Utenti WHERE Email = ?', [req.session.logged_in_email_address], (err, rows) => 
             {
                 connection.release();
 
@@ -46,7 +58,7 @@ module.exports = function(app, pool, bcrypt)
                 throw err;
             }
 
-            connection.query('SELECT * from heroku_9a2800c73c30d21.Utenti WHERE Email = ?', [req.session.logged_in_email_address], (err, rows) => 
+            connection.query('SELECT * from ' + db + '.Utenti WHERE Email = ?', [req.session.logged_in_email_address], (err, rows) => 
             {
                 if(rows.length <= 0)
                 {
@@ -76,7 +88,7 @@ module.exports = function(app, pool, bcrypt)
                         {
                             bcrypt.hash(req.body.newpassword, 10).then(function(hash) {
                                 
-                                connection.query('UPDATE heroku_9a2800c73c30d21.Utenti SET Password = ? WHERE Email = ?', [hash, req.session.logged_in_email_address], (err, rows) => {
+                                connection.query('UPDATE ' + db + '.Utenti SET Password = ? WHERE Email = ?', [hash, req.session.logged_in_email_address], (err, rows) => {
                                     
                                     connection.release();
                                     res.redirect('/libreria');
@@ -117,7 +129,7 @@ module.exports = function(app, pool, bcrypt)
                 throw err;
             }
 
-            connection.query('SELECT * from heroku_9a2800c73c30d21.Utenti WHERE Email = ?', [req.body.email], (err, rows) => 
+            connection.query('SELECT * from ' + db + '.Utenti WHERE Email = ?', [req.body.email], (err, rows) => 
             {
                 connection.release();
 
@@ -149,21 +161,6 @@ module.exports = function(app, pool, bcrypt)
                     return;
                 }
                 
-
-                /*
-                var same = bcrypt.compareSync(plaintextPassword, rows[0].Password);
-
-                if (same) {
-                    req.session.logged_in = true;
-                    req.session.logged_in_email_address = req.body.email;
-                    req.session.logged_in_id = idUtente;
-                    res.redirect('/libreria');
-                }else {
-                    res.render('auth/login', { messaggio: "Email o password errati", req: req });
-                    return;
-                }
-                */
-
             })
         });
     });
@@ -193,7 +190,7 @@ module.exports = function(app, pool, bcrypt)
                         throw err;
                     }
 
-                    connection.query('SELECT * from heroku_9a2800c73c30d21.Utenti WHERE Email = ?', [req.body.email], (err, rows) => {
+                    connection.query('SELECT * from ' + db + '.Utenti WHERE Email = ?', [req.body.email], (err, rows) => {
 
                         if (err) {
                             console.error(err);
@@ -202,14 +199,14 @@ module.exports = function(app, pool, bcrypt)
                         if (rows.length <= 0) {
                             //l'utente si può registrare
 
-                            connection.query('INSERT INTO heroku_9a2800c73c30d21.Utenti(Nome, Cognome, Email, Password) VALUES (?, ?, ?, ?);', [req.body.nome, req.body.cognome, req.body.email, hashedPassword], (err, rows) => {
+                            connection.query('INSERT INTO ' + db + '.Utenti(Nome, Cognome, Email, Password) VALUES (?, ?, ?, ?);', [req.body.nome, req.body.cognome, req.body.email, hashedPassword], (err, rows) => {
 
                                 if (err) {
                                     console.error(err);
                                 }
                             });
 
-                            connection.query('SELECT * FROM heroku_9a2800c73c30d21.Utenti WHERE Email = ?', [req.body.email], (err, data) => {
+                            connection.query('SELECT * FROM ' + db + '.Utenti WHERE Email = ?', [req.body.email], (err, data) => {
                                 connection.release();
 
                                 var idUtente = data[0].Id;

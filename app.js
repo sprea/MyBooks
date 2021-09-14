@@ -23,11 +23,12 @@ var forceSSL = function(req, res, next){
 }
 
 //redirigo il traffico su HTTPS
-if (env === 'production') {
+if (env === 'production') 
+{
     app.use(forceSsl);
 }
 
-//L'api risponde in formato json
+//json parser
 app.use(express.json())
 app.use(express.urlencoded({
     extended: true
@@ -35,30 +36,48 @@ app.use(express.urlencoded({
 
 //Autenticazione
 app.use(cookieParser(process.env.COOKIE_SECRET));
-app.use(session({
-    name: 'session',
-    secret: process.env.COOKIE_SECRET,
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-        secure: true,
-        httpOnly: true,
-        domain: 'mybookset.herokuapp.com',
-        maxAge: 2700000,  //2700000 ms corrispondono a 45 minuti
-        path: '/'
-    }
-}));
+if(env === 'production')
+{
+    app.use(session({
+        name: 'session',
+        secret: process.env.COOKIE_SECRET,
+        resave: false,
+        saveUninitialized: false,
+        cookie: {
+            secure: true,
+            httpOnly: true,
+            domain: 'mybookset.herokuapp.com',
+            maxAge: 2700000,  //2700000 ms corrispondono a 45 minuti
+            path: '/'
+        }
+    }));
+}else
+{
+    app.use(session({
+        name: 'session',
+        secret: process.env.COOKIE_SECRET,
+        resave: false,
+        saveUninitialized: false,
+        cookie: {
+            secure: false,
+            httpOnly: true,
+            maxAge: 2700000,  //2700000 ms corrispondono a 45 minuti
+            path: '/'
+        }
+    }));
+}
+
 
 //configurazione ejs
 app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, 'api/views'));
+app.set('views', path.join(__dirname, 'app/views'));
 
 //Connessione database mysql
 db = config.database;
 const pool = mysql.createPool(db);
 
-require('./api/routes/libri')(app, pool, axios);
-require('./api/routes/user')(app, pool, bcrypt);
+require('./app/routes/libri')(app, pool, axios);
+require('./app/routes/user')(app, pool, bcrypt);
 
 app.get('/', (req, res) => {
     res.render('landing', { messaggio: '', req: req });
