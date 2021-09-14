@@ -2,18 +2,30 @@
 const express = require('express');
 const mysql = require('mysql');
 const path = require('path');
-const https = require('https');
-const http = require('http');
 const axios = require('axios');
 const bcrypt = require('bcrypt');
-const session = require('express-session');
+const session = require('cookie-session');
 const cookieParser = require('cookie-parser');
 require('dotenv').config();
+
+var env = process.env.NODE_ENV || 'development';
 
 var app = express();
 const porta = process.env.PORT || 5000;
 const config = require('./db.config');
 
+var forceSSL = function(req, res, next){
+    if(req.headers['x-forwarded-proto'] !== 'https'){
+        return res.redirect(['https://', req.get('Host'), req.url].join(''));
+    }
+
+    return next();
+}
+
+//redirigo il traffico su HTTPS
+if (env === 'production') {
+    app.use(forceSsl);
+}
 
 //L'api risponde in formato json
 app.use(express.json())
@@ -24,13 +36,16 @@ app.use(express.urlencoded({
 //Autenticazione
 app.use(cookieParser(process.env.COOKIE_SECRET));
 app.use(session({
+    name: 'session',
     secret: process.env.COOKIE_SECRET,
     resave: false,
     saveUninitialized: false,
     cookie: {
+        secure: true,
+        httpOnly: true,
+        domain: 'mybookset.herokuapp.com',
         maxAge: 2700000,  //2700000 ms corrispondono a 45 minuti
-        path: '/',
-        httpOnly: true
+        path: '/'
     }
 }));
 
