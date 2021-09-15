@@ -4,19 +4,20 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="/static/style.css">
     <title>Libreria</title>
     <%- include('./partials/navbar'); %>
 </head>
 <body>
 <div class="container">
-    <div class="title" align="left">
+    <div class="title" id="titleleft">
         <p class="h3">Risultati della ricerca</p>
         <p class="h5"><a href="/libreria">Torna alla libreria</a></p>
     </div>
 
     <div class="row" style="padding-top: 30px; padding-left: 10px; padding-right: 10px;">
         <% if(n == 0){ %>
-            <div class="subtitle" align="center">
+            <div class="subtitle" id="titlecenter">
                 <h2>Nessun libro trovato</h2>
             </div>
         <% }else{ %>

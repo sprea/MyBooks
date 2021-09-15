@@ -4,11 +4,12 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="/static/style.css">
     <title>Profilo</title>
     <%- include('../partials/navbar'); %>
 </head>
 <body>
-    <div class="container container-fluid" align="center">
+    <div class="container container-fluid" id="titlecenter">
 
         <% if(messaggio.length != 0) { %>
             <div class="alert alert-warning alert-dismissible fade show" role="alert">
@@ -29,7 +30,7 @@
             </dt>
         </dl>
             <br>
-                <h3 align="left">Cambia password</h3>
+                <h3 id="titleleft">Cambia password</h3>
                 <form action="/profilo" method="POST">
                     <div class="form-group row">
                         <div class="form-group col-md-6">

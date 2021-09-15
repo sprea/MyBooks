@@ -72,6 +72,8 @@ if(env === 'production')
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'app/views'));
 
+app.use('/static', express.static(path.join(__dirname, 'app/public')));
+
 //Connessione database mysql
 db = config.database;
 const pool = mysql.createPool(db);

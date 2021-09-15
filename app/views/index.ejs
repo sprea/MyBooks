@@ -4,21 +4,22 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="/static/style.css">
     <title>Libreria</title>
     <%- include('./partials/navbar'); %>
-    <div class="container" align="left">
+    <div class="container" id="titleleft">
         <h2>Libreria</h2>
     </div>
 </head>
 <body>
 <div class="container">
         
-    <p>
+    <div>
         <h4>Condividi la tua libreria</h4>
         <button type="button" class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#shareModal">
             Condividi
         </button>
-    </p>
+    </div>
     <div class="modal fade" id="shareModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -132,7 +133,7 @@
         <% }) %>
     </div>
     <% } else { %>
-        <div class="subtitle" align="center">
+        <div class="subtitle" id="titlecenter">
             <h2>Ancora nessun libro inserito: <a href="/libreria/aggiungi">vai alla pagina di inserimento</a></h2>
         </div>
     <% } %>
