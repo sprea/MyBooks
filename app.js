@@ -25,7 +25,7 @@ var forceSSL = function(req, res, next){
 //redirigo il traffico su HTTPS
 if (env === 'production') 
 {
-    app.use(forceSsl);
+    app.use(forceSSL);
 }
 
 //json parser
