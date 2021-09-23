@@ -78,8 +78,8 @@ app.use('/static', express.static(path.join(__dirname, 'app/public')));
 db = config.database;
 const pool = mysql.createPool(db);
 
-require('./app/routes/libri')(app, pool, axios);
-require('./app/routes/user')(app, pool, bcrypt);
+require('./app/routes/libri')(app, pool, axios, env);
+require('./app/routes/user')(app, pool, bcrypt, env);
 
 app.get('/', (req, res) => {
     res.render('landing', { messaggio: '', req: req });

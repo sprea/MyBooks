@@ -1,7 +1,5 @@
-module.exports = function(app, pool, bcrypt)
+module.exports = function(app, pool, bcrypt, env)
 {
-    require('dotenv').config();
-    var env = process.env.NODE_ENV;
     var db;
 
     if(env === 'production')
