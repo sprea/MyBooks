@@ -19,7 +19,7 @@
   },
   "homepage": "https://github.com/sprea/MyBooks#readme",
   "dependencies": {
-    "axios": "^0.21.1",
+    "axios": "^0.21.2",
     "bcrypt": "^5.0.1",
     "body": "^5.1.0",
     "body-parser": "^1.19.0",
