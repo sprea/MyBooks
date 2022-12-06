@@ -32,7 +32,7 @@
     "http": "^0.0.1-security",
     "https": "^1.0.0",
     "mysql": "^2.18.1",
-    "qs": "^6.10.1"
+    "qs": "^6.10.3"
   },
   "devDependencies": {
     "nodemon": "^2.0.12"
